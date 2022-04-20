@@ -278,3 +278,50 @@ void __fastcall FUN_00421950(wchar_t *param_1) // 0x00421950
         004219c2 e8 e7 ab        CALL       _fclose                                          int _fclose(FILE * _File)
                  03 00
         004219c7 83 c4 04        ADD        ESP,0x4
+
+
+// BOSS LIFE COUNT decrement
+th06e.exe+12893:
+0041288D - 2B 55 F8  - sub edx,[ebp-08]
+00412890 - 8B 45 DC  - mov eax,[ebp-24]
+00412893 - 89 90 E40C0000  - mov [eax+00000CE4],edx <<
+00412899 - 8B 4D DC  - mov ecx,[ebp-24]
+0041289C - D9 05 48B06C00  - fld dword ptr [th06e.exe+2CB048]
+
+EAX=004B8898
+EBX=0020D000
+ECX=004B8898
+EDX=00001850
+ESI=00000000
+EDI=76960A60
+ESP=0019FCF8
+EBP=0019FD5C
+EIP=00412899
+
+
+First seen:20:05:44
+Last seen:20:05:52
+
+
+// BOSS SPECIAL LIFE DOWNGRADE
+
+th06e.exe+11FC5:
+00411FBC - 8B 45 E8  - mov eax,[ebp-18]
+00411FBF - 8B 88 A80E0000  - mov ecx,[eax+00000EA8]
+00411FC5 - 89 8A E40C0000  - mov [edx+00000CE4],ecx <<
+00411FCB - 8B 55 E8  - mov edx,[ebp-18]
+00411FCE - C7 82 A80E0000 FFFFFFFF - mov [edx+00000EA8],FFFFFFFF
+
+EAX=004B8898
+EBX=0020D000
+ECX=00000384
+EDX=004B8898
+ESI=00000000
+EDI=76960A60
+ESP=0019FCD8
+EBP=0019FCF0
+EIP=00411FCB
+
+
+First seen:20:08:51
+Last seen:20:08:51
