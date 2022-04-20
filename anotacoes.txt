@@ -1,0 +1,280 @@
+void __fastcall FUN_004121b0(int param_1) // 0x004121b0
+
+{
+  if (*(byte *)(param_1 + 0xe51) >> 5 == 0) {
+    *(byte *)(param_1 + 0xe50) = *(byte *)(param_1 + 0xe50) & 0x7f;
+  }
+  else {
+    *(byte *)(param_1 + 0xe51) = *(byte *)(param_1 + 0xe51) & 0xfe;
+  }
+  if ((*(byte *)(param_1 + 0xe51) >> 3 & 1) != 0) {
+    DAT_0069bc50 = 0;
+  }
+  if (*(int *)(param_1 + 0xea0) != 0) {
+    FUN_004114c0(param_1);
+  }
+  return;
+}
+                             FUN_004121b0                                
+                                                                                     
+        004121b0 55              PUSH       EBP
+        004121b1 8b ec           MOV        EBP,ESP
+        004121b3 51              PUSH       param_1
+        004121b4 89 4d fc        MOV        dword ptr [EBP + local_8],param_1
+        004121b7 8b 45 fc        MOV        EAX,dword ptr [EBP + local_8]
+        004121ba 8a 88 51        MOV        param_1,byte ptr [EAX + 0xe51]
+                 0e 00 00
+        004121c0 c0 e9 05        SHR        param_1,0x5
+        004121c3 80 e1 07        AND        param_1,0x7
+        004121c6 81 e1 ff        AND        param_1,0xff
+                 00 00 00
+        004121cc 85 c9           TEST       param_1,param_1
+        004121ce 75 16           JNZ        LAB_004121e6
+        004121d0 8b 55 fc        MOV        EDX,dword ptr [EBP + local_8]
+        004121d3 8a 82 50        MOV        AL,byte ptr [EDX + 0xe50]
+                 0e 00 00
+        004121d9 24 7f           AND        AL,0x7f
+        004121db 8b 4d fc        MOV        param_1,dword ptr [EBP + local_8]
+        004121de 88 81 50        MOV        byte ptr [param_1 + 0xe50],AL
+                 0e 00 00
+        004121e4 eb 14           JMP        LAB_004121fa
+
+
+        
+void __thiscall FUN_0041e150(void *this,int **param_1,int param_2,int param_3) // 0x0041e150
+
+{
+  HDC hdc;
+  HFONT h;
+  HGDIOBJ h_00;
+  int iVar1;
+  
+  hdc = CreateCompatibleDC((HDC)0x0);
+  h = CreateFontA(param_3,param_2,0,0,400,0,0,0,0x80,0,0,0,0,"Arial");
+  if (h != (HFONT)0x0) {
+    h_00 = SelectObject(hdc,h);
+    iVar1 = FUN_0043f745(param_1,h,(undefined4 *)((int)this + 4));
+    if (iVar1 < 0) {
+      MessageBoxA((HWND)0x0,"D3DXCreateFontIndirect FALSE",(LPCSTR)&lpCaption_0046b0a8,0);
+    }
+    else {
+      SelectObject(hdc,h_00);
+      DeleteObject(h);
+    }
+  }
+  return;
+}
+
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void __cdecl FUN_00420c10(HINSTANCE param_1) // 0x00420c10
+
+{
+  int iVar1;
+  int iVar2;
+  WNDCLASSA *pWVar3;
+  WNDCLASSA local_34;
+  int local_c;
+  int local_8;
+  
+  pWVar3 = &local_34;
+  for (iVar2 = 10; iVar2 != 0; iVar2 = iVar2 + -1) {
+    pWVar3->style = 0;
+    pWVar3 = (WNDCLASSA *)&pWVar3->lpfnWndProc;
+  }
+  local_34.hbrBackground = (HBRUSH)GetStockObject(0);
+  local_34.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
+  local_34.hInstance = param_1;
+  local_34.lpfnWndProc = FUN_00420d40;
+  _DAT_006c6bdc = 0;
+  _DAT_006c6be0 = 0;
+  local_34.lpszClassName = (LPCSTR)&lpClassName_0046b2c3;
+  RegisterClassA(&local_34);
+  if (DAT_006c6e4a == '\0') {
+    local_c = 0x280;
+    local_8 = 0x1e0;
+    DAT_006c6bd4 = CreateWindowExA(0,(LPCSTR)&lpClassName_0046b2c3,
+                                   "Touhou koumakyou ~ the Embodiment of Scarlet Devil",0xcf0000,0,0
+                                   ,0x280,0x1e0,(HWND)0x0,(HMENU)0x0,param_1,(LPVOID)0x0);
+  }
+  else {
+    iVar2 = GetSystemMetrics(7);
+    local_c = iVar2 * 2 + 0x280;
+    iVar2 = GetSystemMetrics(8);
+    iVar1 = GetSystemMetrics(4);
+    local_8 = iVar1 + 0x1e0 + iVar2 * 2;
+    DAT_006c6bd4 = CreateWindowExA(0,(LPCSTR)&lpClassName_0046b2c3,
+                                   "Touhou koumakyou ~ the Embodiment of Scarlet Devil",0x100a0000,
+                                   -0x80000000,-0x80000000,local_c,local_8,(HWND)0x0,(HMENU)0x0,
+                                   param_1,(LPVOID)0x0);
+  }
+  DAT_006c6d5c = DAT_006c6bd4;
+  return;
+}
+
+                             FUN_00420c10                                   
+        00420c10 55              PUSH       EBP
+        00420c11 8b ec           MOV        EBP,ESP
+        00420c13 83 ec 30        SUB        ESP,0x30
+        00420c16 56              PUSH       ESI
+        00420c17 57              PUSH       EDI
+        00420c18 b9 0a 00        MOV        ECX,0xa
+                 00 00
+        00420c1d 33 c0           XOR        EAX,EAX
+        00420c1f 8d 7d d0        LEA        EDI=>local_34,[EBP + -0x30]
+        00420c22 f3 ab           STOSD.REP  ES:EDI
+        00420c24 6a 00           PUSH       0x0                                              int i for GetStockObject
+        00420c26 ff 15 1c        CALL       dword ptr [->GDI32.DLL::GetStockObject]          = 000756de
+                 a0 46 00
+        00420c2c 89 45 ec        MOV        dword ptr [EBP + local_18],EAX
+        00420c2f 68 00 7f        PUSH       0x7f00                                           LPCSTR lpCursorName for LoadCurs
+                 00 00
+        00420c34 6a 00           PUSH       0x0                                              HINSTANCE hInstance for LoadCurs
+        00420c36 ff 15 c0        CALL       dword ptr [->USER32.DLL::LoadCursorA]            = 000755b2
+                 a1 46 00
+        00420c3c 89 45 e8        MOV        dword ptr [EBP + local_1c],EAX
+        00420c3f 8b 45 08        MOV        EAX,dword ptr [EBP + param_1]
+        00420c42 89 45 e0        MOV        dword ptr [EBP + local_24],EAX
+        00420c45 c7 45 d4        MOV        dword ptr [EBP + local_30],FUN_00420d40
+                 40 0d 42 00
+        00420c4c c7 05 dc        MOV        dword ptr [DAT_006c6bdc],0x0                     = ??
+                 6b 6c 00 
+                 00 00 00 00
+        00420c56 c7 05 e0        MOV        dword ptr [DAT_006c6be0],0x0                     = ??
+                 6b 6c 00 
+                 00 00 00 00
+        00420c60 c7 45 f4        MOV        dword ptr [EBP + local_10],lpClassName_0046b2c3  = 45534142
+                 c3 b2 46 00
+        00420c67 8d 4d d0        LEA        ECX=>local_34,[EBP + -0x30]
+        00420c6a 51              PUSH       ECX                                              WNDCLASSA * lpWndClass for Regis
+        00420c6b ff 15 c4        CALL       dword ptr [->USER32.DLL::RegisterClassA]         = 000755a0
+                 a1 46 00
+        00420c71 33 d2           XOR        EDX,EDX
+        00420c73 8a 15 4a        MOV        DL,byte ptr [DAT_006c6e4a]                       = ??
+                 6e 6c 00
+        00420c79 85 d2           TEST       EDX,EDX
+        00420c7b 75 42           JNZ        LAB_00420cbf
+        00420c7d c7 45 f8        MOV        dword ptr [EBP + local_c],0x280
+                 80 02 00 00
+        00420c84 c7 45 fc        MOV        dword ptr [EBP + local_8],0x1e0
+                 e0 01 00 00
+        00420c8b 6a 00           PUSH       0x0                                              LPVOID lpParam for CreateWindowExA
+        00420c8d 8b 45 08        MOV        EAX,dword ptr [EBP + param_1]
+        00420c90 50              PUSH       EAX                                              HINSTANCE hInstance for CreateWi
+        00420c91 6a 00           PUSH       0x0                                              HMENU hMenu for CreateWindowExA
+        00420c93 6a 00           PUSH       0x0                                              HWND hWndParent for CreateWindow
+        00420c95 8b 4d fc        MOV        ECX,dword ptr [EBP + local_8]
+        00420c98 51              PUSH       ECX                                              int nHeight for CreateWindowExA
+        00420c99 8b 55 f8        MOV        EDX,dword ptr [EBP + local_c]
+        00420c9c 52              PUSH       EDX                                              int nWidth for CreateWindowExA
+        00420c9d 6a 00           PUSH       0x0                                              int Y for CreateWindowExA
+        00420c9f 6a 00           PUSH       0x0                                              int X for CreateWindowExA
+        00420ca1 68 00 00        PUSH       0xcf0000                                         DWORD dwStyle for CreateWindowExA
+                 cf 00
+        00420ca6 68 f8 b1        PUSH       s_Touhou_koumakyou_~_the_Embodimen_0046b1f8      LPCSTR lpWindowName for CreateWi
+                 46 00
+        00420cab 68 c3 b2        PUSH       lpClassName_0046b2c3                             LPCSTR lpClassName for CreateWin
+                 46 00
+        00420cb0 6a 00           PUSH       0x0                                              DWORD dwExStyle for CreateWindow
+        00420cb2 ff 15 c8        CALL       dword ptr [->USER32.DLL::CreateWindowExA]        = 0007558e
+                 a1 46 00
+        00420cb8 a3 d4 6b        MOV        [DAT_006c6bd4],EAX                               = ??
+                 6c 00
+        00420cbd eb 66           JMP        LAB_00420d25
+                             LAB_00420cbf                                    XREF[1]:     00420c7b(j)  
+        00420cbf 6a 07           PUSH       0x7                                              int nIndex for GetSystemMetrics
+        00420cc1 ff 15 cc        CALL       dword ptr [->USER32.DLL::GetSystemMetrics]       = 0007557a
+                 a1 46 00
+        00420cc7 8d 84 00        LEA        EAX,[EAX + EAX*0x1 + 0x280]
+                 80 02 00 00
+        00420cce 89 45 f8        MOV        dword ptr [EBP + local_c],EAX
+        00420cd1 6a 08           PUSH       0x8                                              int nIndex for GetSystemMetrics
+        00420cd3 ff 15 cc        CALL       dword ptr [->USER32.DLL::GetSystemMetrics]       = 0007557a
+                 a1 46 00
+        00420cd9 8b f0           MOV        ESI,EAX
+        00420cdb 6a 04           PUSH       0x4                                              int nIndex for GetSystemMetrics
+        00420cdd ff 15 cc        CALL       dword ptr [->USER32.DLL::GetSystemMetrics]       = 0007557a
+                 a1 46 00
+        00420ce3 8d 8c 70        LEA        ECX,[EAX + ESI*0x2 + 0x1e0]
+                 e0 01 00 00
+        00420cea 89 4d fc        MOV        dword ptr [EBP + local_8],ECX
+        00420ced 6a 00           PUSH       0x0                                              LPVOID lpParam for CreateWindowExA
+        00420cef 8b 55 08        MOV        EDX,dword ptr [EBP + param_1]
+        00420cf2 52              PUSH       EDX                                              HINSTANCE hInstance for CreateWi
+        00420cf3 6a 00           PUSH       0x0                                              HMENU hMenu for CreateWindowExA
+        00420cf5 6a 00           PUSH       0x0                                              HWND hWndParent for CreateWindow
+        00420cf7 8b 45 fc        MOV        EAX,dword ptr [EBP + local_8]
+        00420cfa 50              PUSH       EAX                                              int nHeight for CreateWindowExA
+        00420cfb 8b 4d f8        MOV        ECX,dword ptr [EBP + local_c]
+        00420cfe 51              PUSH       ECX                                              int nWidth for CreateWindowExA
+        00420cff 68 00 00        PUSH       0x80000000                                       int Y for CreateWindowExA
+                 00 80
+        00420d04 68 00 00        PUSH       0x80000000                                       int X for CreateWindowExA
+                 00 80
+        00420d09 68 00 00        PUSH       0x100a0000                                       DWORD dwStyle for CreateWindowExA
+                 0a 10
+        00420d0e 68 f8 b1        PUSH       s_Touhou_koumakyou_~_the_Embodimen_0046b1f8      LPCSTR lpWindowName for CreateWi
+                 46 00
+        00420d13 68 c3 b2        PUSH       lpClassName_0046b2c3                             LPCSTR lpClassName for CreateWin
+                 46 00
+        00420d18 6a 00           PUSH       0x0                                              DWORD dwExStyle for CreateWindow
+        00420d1a ff 15 c8        CALL       dword ptr [->USER32.DLL::CreateWindowExA]        = 0007558e
+                 a1 46 00
+        00420d20 a3 d4 6b        MOV        [DAT_006c6bd4],EAX                               = ??
+                 6c 00
+                             LAB_00420d25                                    XREF[1]:     00420cbd(j)  
+        00420d25 8b 15 d4        MOV        EDX,dword ptr [DAT_006c6bd4]                     = ??
+                 6b 6c 00
+        00420d2b 89 15 5c        MOV        dword ptr [DAT_006c6d5c],EDX                     = ??
+                 6d 6c 00
+        00420d31 5f              POP        EDI
+        00420d32 5e              POP        ESI
+        00420d33 8b e5           MOV        ESP,EBP
+        00420d35 5d              POP        EBP
+        00420d36 c3              RET
+        00420d37 cc cc cc        align      align(9)
+                 cc cc cc 
+                 cc cc cc
+
+
+
+void __fastcall FUN_00421950(wchar_t *param_1) // 0x00421950
+
+{
+  FILE *_File;
+  
+  if (*(wchar_t **)(param_1 + 0x400) != param_1) {
+    FUN_0041e4d0((int)param_1,
+                 (byte *)"---------------------------------------------------------- \n");
+    if (*(char *)(param_1 + 0x402) != '\0') {
+      MessageBoxA((HWND)0x0,(LPCSTR)param_1,(LPCSTR)&lpCaption_0046b520,0x10);
+    }
+    _File = (FILE *)FUN_0045ca0b("./log.txt","wt");
+    FID_conflict:_fwprintf(_File,param_1);
+    _fclose(_File);
+  }
+  return;
+}
+
+                             LAB_00421999                                    XREF[1]:     00421984(j)  
+        00421999 68 1c b5        PUSH       DAT_0046b51c                                     = 77h    w
+                 46 00
+        0042199e 68 10 b5        PUSH       s_./log.txt_0046b510                             = "./log.txt"
+                 46 00
+        004219a3 e8 63 b0        CALL       FUN_0045ca0b                                     undefined FUN_0045ca0b(char * pa
+                 03 00
+        004219a8 83 c4 08        ADD        ESP,0x8
+        004219ab 89 45 fc        MOV        dword ptr [EBP + local_8],EAX
+        004219ae 8b 45 f8        MOV        EAX,dword ptr [EBP + local_c]
+        004219b1 50              PUSH       EAX
+        004219b2 8b 4d fc        MOV        param_1,dword ptr [EBP + local_8]
+        004219b5 51              PUSH       param_1
+        004219b6 e8 52 b9        CALL       FID_conflict:_fwprintf                           int FID_conflict:_fwprintf(FILE 
+                 03 00
+        004219bb 83 c4 08        ADD        ESP,0x8
+        004219be 8b 55 fc        MOV        EDX,dword ptr [EBP + local_8]
+        004219c1 52              PUSH       EDX
+        004219c2 e8 e7 ab        CALL       _fclose                                          int _fclose(FILE * _File)
+                 03 00
+        004219c7 83 c4 04        ADD        ESP,0x4
