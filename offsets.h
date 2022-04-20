@@ -11,3 +11,4 @@ DWORD pointItemsOffset = gameBase + 0x29D4B4;
 DWORD bossLifeOffset   = gameBase + 0xB957C; // 100000 = max value
 DWORD bombCountOffset  = gameBase + 0x29D4BA; // 100000 = max value
 DWORD lifeCountOffset  = gameBase + 0x29D4BA; // ... 772 = 4 life; 771 = 3 life; 770 = 2 lifes; 769 = 1 life
+DWORD xPositionOffset  = gamebase + 0x2CAAC8; // maybe
