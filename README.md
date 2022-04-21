@@ -5,4 +5,4 @@ studying external windows API hooking with touhou 6
 - [ ] Offset Calculation
 - [ ] External function hooking
 - [ ] Direct memory writing bindings
-- [ ] directx hooking
+- [ ] directx hooking (implement overlay)
