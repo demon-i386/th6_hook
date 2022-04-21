@@ -5,11 +5,46 @@
 #include <wchar.h>
 #include <psapi.h>
 #include <libloaderapi.h>
+#include <vector>
 #include "offsets.h"
 #include "libhook.h"
 #pragma comment( lib, "psapi.lib" )
 
-const  wchar_t* targetProcess = L"th06e.exe";
+const wchar_t* targetProcess = L"th06e.exe";
+
+uintptr_t findDMAAddy(HANDLE hProc, uintptr_t ptr, std::vector<unsigned int> offsets) {
+	uintptr_t addr = ptr;
+	for (unsigned int i = 0; i < offsets.size(); ++i) {
+		ReadProcessMemory(hProc, (BYTE*)addr, &addr, sizeof(addr), 0);
+		addr += offsets[i];
+	}
+	return addr;
+
+}
+uintptr_t GetModuleBaseAddress(DWORD procId, const wchar_t* modName)
+{
+	printf("GetModuleBaseAddress :: negotiation started on PID 0x%08X\n", GetProcessId((HANDLE)procId));
+	uintptr_t modBaseAddr = 0;
+	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, GetProcessId((HANDLE)procId));
+	if (hSnap != INVALID_HANDLE_VALUE){
+		MODULEENTRY32 modEntry;
+		modEntry.dwSize = sizeof(modEntry);
+		if (Module32First(hSnap, &modEntry)){
+			wprintf(L"mod name :: %s\n", modEntry.szExePath);
+			do{
+				if (!_wcsicmp(modEntry.szModule, modName)){
+					modBaseAddr = (uintptr_t)modEntry.modBaseAddr;
+					break;
+				}
+			} while (Module32Next(hSnap, &modEntry));
+		}
+	}
+	else {
+		printf("error recovering modules\n");
+	}
+	CloseHandle(hSnap);
+	return modBaseAddr;
+}
 
 HANDLE* getProcessHandler() {
 	PROCESSENTRY32 pTable;
@@ -25,6 +60,16 @@ HANDLE* getProcessHandler() {
 		}
 	}
 }
+
+DWORD WINAPI controllerThread(LPVOID lpParameter){
+	DWORD powerValue;
+
+	while (true) {
+		ReadProcessMemory(GetCurrentProcess(), (LPVOID)(0x69D4BB), &powerValue, sizeof(powerValue), nullptr);
+		printf("\nCURRENT BOMBS :: %d", powerValue);
+	}
+}
+
 
 
 void EnableDebugPriv() {
@@ -46,10 +91,12 @@ void EnableDebugPriv() {
 }
 
 
+
+
 int main() {
 	EnableDebugPriv();
 	setvbuf(stdout, NULL, _IONBF, 0);
-	HANDLE tProcHandler = NULL;
+	HANDLE *tProcHandler = NULL;
 	tProcHandler = getProcessHandler();
 	HMODULE tProcModules[1024];
 	DWORD cbNeeded;
@@ -68,12 +115,13 @@ int main() {
 			}
 		}
 	}
-	gameBase = (DWORD)tProcModules[0];
 
-	// uintptr_t baseModuleHandler = (uintptr_t)GetProcAddress(GetModuleHandle(tProcModules[0]));
+	uintptr_t gameBase = GetModuleBaseAddress((DWORD)tProcHandler, targetProcess);
 
-	printf("\nPOWER OFFSET :: 0x%08X", powerOffset);
+	CreateRemoteThread(tProcHandler, NULL, NULL, (LPTHREAD_START_ROUTINE)controllerThread, NULL, NULL, NULL);
+	while (true) {
+		printf(" ");
+	}
 
-	printf("\nMAIN PROC BASE :: %p", tProcModules[0]);
 	CloseHandle(tProcHandler);
 }
