@@ -61,7 +61,7 @@ HANDLE* getProcessHandler() {
 	}
 }
 
-DWORD WINAPI controllerThread(LPVOID lpParameter){
+DWORD __stdcall controllerThread( ){
 	DWORD powerValue;
 
 	while (true) {
@@ -101,6 +101,7 @@ int main() {
 	HMODULE tProcModules[1024];
 	DWORD cbNeeded;
 	char szModName[MAX_PATH];
+	DWORD powerValue = NULL;
 	int* pointerArray[1024];
 
 	if (tProcHandler == 0) {
@@ -118,10 +119,32 @@ int main() {
 
 	uintptr_t gameBase = GetModuleBaseAddress((DWORD)tProcHandler, targetProcess);
 
-	CreateRemoteThread(tProcHandler, NULL, NULL, (LPTHREAD_START_ROUTINE)controllerThread, NULL, NULL, NULL);
+	// void* loc = VirtualAllocEx(tProcHandler, 0, MAX_PATH, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+
+	// CreateRemoteThread(tProcHandler, NULL, NULL, (LPTHREAD_START_ROUTINE)controllerThread, loc, NULL, NULL);
+	int option = 0;
+
+	char buff = 0;
+
 	while (true) {
-		printf(" ");
+		printf("\n1 :: read bombs | 2 :: write bombs - ");
+		scanf_s("%d", &option, 128);
+		switch (option) {
+		case 1:
+			ReadProcessMemory(tProcHandler, (LPVOID)(offsets.bombCountOffset), &powerValue, sizeof(powerValue), nullptr);
+			printf("\ncurrent bombs :: %d\n", powerValue);
+			break;
+		case 2:
+			printf("how many bombs - ");
+			scanf_s("%d", &buff);
+			WriteProcessMemory(tProcHandler, (LPVOID)(offsets.bombCountOffset), &buff, sizeof(buff), nullptr);
+			break;
+		default:
+			printf("select a valid option %d\n", option);
+			break;
+		}
 	}
+	
 
 	CloseHandle(tProcHandler);
 }
