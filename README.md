@@ -6,3 +6,4 @@ studying external windows API hooking with touhou 6
 - [ ] External function hooking
 - [ ] Direct memory writing bindings
 - [ ] directx hooking (implement overlay)
+- [ ] create keyboard handler thread in game process
